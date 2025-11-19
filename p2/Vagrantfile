@@ -1,0 +1,22 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/bookworm64"
+
+  config.vm.define "mtogbeS" do |server|
+    server.vm.hostname = "mtogbeS"
+    server.vm.network "private_network", ip: "192.168.56.110"
+
+    server.vm.provider "virtualbox" do |vb|
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+
+    # Sync your project folder (all apps) to /home/vagrant/apps inside VM
+    server.vm.synced_folder ".", "/home/vagrant/apps"
+
+    # Run setup.sh
+    server.vm.provision "shell", inline: <<-SHELL
+      sudo chmod +x /home/vagrant/apps/setup.sh
+      sudo /home/vagrant/apps/setup.sh
+    SHELL
+  end
+end
