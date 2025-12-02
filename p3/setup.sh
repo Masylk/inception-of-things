@@ -17,7 +17,7 @@ if [[ "$CODENAME" =~ (forky|trixie|sid|testing|unstable) ]]; then
 fi
 
 # -----------------------------
-# 1. Install Docker (idempotent)
+# 1. Install Docker
 # -----------------------------
 if ! command -v docker >/dev/null 2>&1; then
     echo -e "${YELLOW}Docker not found. Installing Docker...${NC}"
@@ -54,7 +54,7 @@ else
 fi
 
 # -----------------------------
-# 2. Install k3d (idempotent)
+# 2. Install k3d
 # -----------------------------
 echo -e "${YELLOW}==> Checking k3d installation...${NC}"
 
