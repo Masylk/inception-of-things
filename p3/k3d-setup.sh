@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-
 # Colors
 YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
@@ -12,16 +11,16 @@ CLUSTER_NAME="mycluster"
 echo "==> Creating k3d cluster: $CLUSTER_NAME"
 # Create cluster if it doesn't exist
 if ! k3d cluster list | grep -q "^$CLUSTER_NAME"; then
-    k3d cluster create "$CLUSTER_NAME" --servers 1 --agents 2
+    # Expose port 8888 on the host to the cluster LoadBalancer
+    k3d cluster create "$CLUSTER_NAME" --servers 1 --agents 2 --port "8888:8888@loadbalancer"
 else
     echo "Cluster $CLUSTER_NAME already exists. Skipping creation."
 fi
 
 echo -e "${YELLOW}==> Setting up kubeconfig for k3d cluster...${NC}"
 mkdir -p ~/.kube
-k3d kubeconfig get mycluster > ~/.kube/config
+k3d kubeconfig get "$CLUSTER_NAME" > ~/.kube/config
 sudo chown $(id -u):$(id -g) ~/.kube/config
-
 
 echo "==> Creating namespaces"
 for ns in dev argocd; do
