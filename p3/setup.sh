@@ -66,5 +66,20 @@ else
     echo -e "${GREEN}k3d already installed. Skipping.${NC}"
 fi
 
+# -----------------------------
+# 3. Install kubectl
+# -----------------------------
+echo -e "${YELLOW}==> Checking kubectl installation...${NC}"
+
+if ! command -v kubectl >/dev/null 2>&1; then
+    echo -e "${YELLOW}kubectl not found. Installing...${NC}"
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm kubectl
+    echo -e "${GREEN}kubectl installed successfully.${NC}"
+else
+    echo -e "${GREEN}kubectl already installed. Skipping.${NC}"
+fi
+
 echo -e "${GREEN}✔ All done!${NC}"
 echo -e "${YELLOW}👉 Logout/login may be required for Docker group permissions.${NC}"

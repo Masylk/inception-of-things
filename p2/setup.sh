@@ -31,7 +31,7 @@ echo "=== Waiting for Traefik to start ==="
 sleep 15
 
 echo "=== Building Docker images for apps and importing into K3s ==="
-for app in app1 app2 app3; do
+for app in app-one app-two app-three; do
 echo "Building Docker image for $app..."
 cd /home/vagrant/apps/$app
 docker build -t $app:latest .
@@ -42,7 +42,7 @@ docker save $app:latest | k3s ctr images import -
 done
 
 echo "=== Applying Kubernetes Deployments and Services ==="
-for app in app1 app2 app3; do
+for app in app-one app-two app-three; do
 kubectl apply -f /home/vagrant/apps/$app/deployment.yaml
 kubectl apply -f /home/vagrant/apps/$app/service.yaml
 done
