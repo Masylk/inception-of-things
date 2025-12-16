@@ -1,6 +1,3 @@
 [submodule "p3/p3/mtogbe-IOT-CI"]
 	path = p3/p3/mtogbe-IOT-CI
 	url = git@github.com:Masylk/mtogbe-IOT-CI.git
-[submodule "p3/mtogbe-IOT-CI"]
-	path = p3/mtogbe-IOT-CI
-	url = git@github.com:Masylk/mtogbe-IOT-CI.git
