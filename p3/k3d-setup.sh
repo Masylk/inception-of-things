@@ -8,6 +8,10 @@ NC='\033[0m'
 
 CLUSTER_NAME="mycluster"
 
+APP_MANIFEST="argocd/playground-app.yaml"
+ARGOCD_NS="argocd"
+PORT=8080
+
 echo "==> Creating k3d cluster: $CLUSTER_NAME"
 # Create cluster if it doesn't exist
 if ! k3d cluster list | grep -q "^$CLUSTER_NAME"; then
@@ -39,9 +43,13 @@ else
     echo "Argo CD is already installed. Skipping."
 fi
 
-echo "==> Port-forward Argo CD UI (temporary)"
-echo "You can run:"
-echo "kubectl port-forward svc/argocd-server -n argocd 8080:443"
-echo "Then access UI at https://localhost:8080"
+echo "==> Applying Argo CD Application manifest..."
+kubectl apply -f "$APP_MANIFEST" -n "$ARGOCD_NS"
 
-echo "==> Setup complete!"
+echo "==> Retrieving Argo CD admin password..."
+ADMIN_PASSWORD=$(kubectl -n "$ARGOCD_NS" get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
+echo "Argo CD admin password: $ADMIN_PASSWORD"
+
+echo "==> Port-forwarding Argo CD server on https://localhost:$PORT ..."
+echo "Press Ctrl+C to stop port-forwarding."
+kubectl port-forward svc/argocd-server -n "$ARGOCD_NS" "$PORT":443
